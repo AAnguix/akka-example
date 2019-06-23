@@ -32,7 +32,7 @@ namespace AAnguix.AkkaExample.Domain.Actors
                     else
                     {
                         Log.Info($"Creating device group actor for {trackMsg.GroupId}");
-                        var groupActor = Context.ActorOf(DeviceGroup.Props(trackMsg.GroupId), $"group-{trackMsg.GroupId}");
+                        var groupActor = Context.ActorOf(DeviceGroup.Props(trackMsg.GroupId, 3), $"group-{trackMsg.GroupId}");
                         Context.Watch(groupActor);
                         groupActor.Forward(trackMsg);
                         groupIdToActor.Add(trackMsg.GroupId, groupActor);

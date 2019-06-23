@@ -1,7 +1,9 @@
 ﻿using AAnguix.AkkaExample.Domain.Messages;
 using AAnguix.AkkaExample.Domain.Messages.Registration;
+using AAnguix.AkkaExample.Domain.Messages.Temperature;
 using Akka.Actor;
 using Akka.Event;
+using System;
 using System.Collections.Generic;
 
 namespace AAnguix.AkkaExample.Domain.Actors
@@ -14,9 +16,10 @@ namespace AAnguix.AkkaExample.Domain.Actors
         private Dictionary<string, IActorRef> deviceIdToActor = new Dictionary<string, IActorRef>();
         private Dictionary<IActorRef, string> actorToDeviceId = new Dictionary<IActorRef, string>();
 
-        public DeviceGroup(string groupId)
+        public DeviceGroup(string groupId, double secondsWaitingForReplies)
         {
             GroupId = groupId;
+            SecondsWaitingForReplies = secondsWaitingForReplies;
         }
 
         protected override void PreStart() => Log.Info($"Device group {GroupId} started");
@@ -24,6 +27,8 @@ namespace AAnguix.AkkaExample.Domain.Actors
 
         protected ILoggingAdapter Log { get; } = Context.GetLogger();
         protected string GroupId { get; }
+
+        protected double SecondsWaitingForReplies { get; }
 
         protected override void OnReceive(object message)
         {
@@ -56,9 +61,12 @@ namespace AAnguix.AkkaExample.Domain.Actors
                     actorToDeviceId.Remove(t.ActorRef);
                     deviceIdToActor.Remove(deviceId);
                     break;
+                case RequestAllTemperatures r:
+                    Context.ActorOf(DeviceGroupQuery.Props(actorToDeviceId, r.RequestId, Sender, TimeSpan.FromSeconds(SecondsWaitingForReplies)));
+                    break;
             }
         }
 
-        public static Props Props(string groupId) => Akka.Actor.Props.Create(() => new DeviceGroup(groupId));
+        public static Props Props(string groupId, double secondsWaitingForReplies) => Akka.Actor.Props.Create(() => new DeviceGroup(groupId, secondsWaitingForReplies));
     }
 }

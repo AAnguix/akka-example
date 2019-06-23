@@ -13,12 +13,13 @@ namespace AAnguix.AkkaExample.UnitTests
     public class DeviceGroupTests : TestKit
     {
         private readonly string _defaultGroup = "group";
+        private readonly double _secondsWaitingForReplies = 1;
 
         [Fact]
         public void DeviceGroup_WhenRequestTrackDevice_ThenDeviceActorRegistered()
         {
             var probe = CreateTestProbe();
-            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup));
+            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup, _secondsWaitingForReplies));
 
             groupActor.Tell(new RequestTrackDevice(_defaultGroup, "device1"), probe.Ref);
             probe.ExpectMsg<DeviceRegistered>();
@@ -40,7 +41,7 @@ namespace AAnguix.AkkaExample.UnitTests
         public void DeviceGroup_WhenRequestTrackDeviceWithGroupId_ThenActorIgnoresRequest()
         {
             var probe = CreateTestProbe();
-            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup));
+            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup, _secondsWaitingForReplies));
 
             groupActor.Tell(new RequestTrackDevice("wrongGroup", "device1"), probe.Ref);
             probe.ExpectNoMsg(TimeSpan.FromMilliseconds(500));
@@ -50,7 +51,7 @@ namespace AAnguix.AkkaExample.UnitTests
         public void DeviceGroup_WhenMultipleRequestTrackDeviceForSameDevice_ThenReturnsSameActor()
         {
             var probe = CreateTestProbe();
-            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup));
+            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup, _secondsWaitingForReplies));
 
             groupActor.Tell(new RequestTrackDevice(_defaultGroup, "device1"), probe.Ref);
             probe.ExpectMsg<DeviceRegistered>();
@@ -67,7 +68,7 @@ namespace AAnguix.AkkaExample.UnitTests
         public void DeviceGroup_WhenRequestDeviceListAndMultipleRegistered_ThenReturnsThem()
         {
             var probe = CreateTestProbe();
-            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup));
+            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup, _secondsWaitingForReplies));
 
             groupActor.Tell(new RequestTrackDevice(_defaultGroup, "device1"), probe.Ref);
             probe.ExpectMsg<DeviceRegistered>();
@@ -85,7 +86,7 @@ namespace AAnguix.AkkaExample.UnitTests
         public void DeviceGroup_WhenOneDeviceShutdown_AndRequestDeviceList_ThenReturnsActiveDevices()
         {
             var probe = CreateTestProbe();
-            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup));
+            var groupActor = Sys.ActorOf(DeviceGroup.Props(_defaultGroup, _secondsWaitingForReplies));
 
             groupActor.Tell(new RequestTrackDevice(_defaultGroup, "device1"), probe.Ref);
             probe.ExpectMsg<DeviceRegistered>();
