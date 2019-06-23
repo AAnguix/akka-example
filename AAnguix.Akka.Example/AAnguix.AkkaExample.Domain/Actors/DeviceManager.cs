@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AAnguix.AkkaExample.Domain
+namespace AAnguix.AkkaExample.Domain.Actors
 {
     /// <summary>
     /// Manages a list of <see cref="DeviceGroup"/>

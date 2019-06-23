@@ -1,4 +1,4 @@
-﻿using AAnguix.AkkaExample.Domain;
+﻿using AAnguix.AkkaExample.Domain.Actors;
 using AAnguix.AkkaExample.Domain.Messages.Registration;
 using AAnguix.AkkaExample.Domain.Messages.Temperature;
 using Akka.TestKit.Xunit2;

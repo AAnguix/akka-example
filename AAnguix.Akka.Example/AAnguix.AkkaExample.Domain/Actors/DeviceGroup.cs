@@ -4,7 +4,7 @@ using Akka.Actor;
 using Akka.Event;
 using System.Collections.Generic;
 
-namespace AAnguix.AkkaExample.Domain
+namespace AAnguix.AkkaExample.Domain.Actors
 {
     /// <summary>
     /// Manages a list of <see cref="Device"/>.

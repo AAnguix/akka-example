@@ -3,7 +3,7 @@ using AAnguix.AkkaExample.Domain.Messages.Temperature;
 using Akka.Actor;
 using Akka.Event;
 
-namespace AAnguix.AkkaExample.Domain
+namespace AAnguix.AkkaExample.Domain.Actors
 {
     /// <summary>
     /// Actor that manages a temperature sensor.
